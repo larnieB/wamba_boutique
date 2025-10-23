@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wamba Boutique — Trendy Fashion, Fast Shipping</title>
+  <meta name="description" content="Wamba Boutique: discover daily drops, affordable fashion, and fast checkout." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"] },
+          colors: {
+            brand: {
+              50: '#f5fbff', 100: '#e6f4ff', 200: '#cde8ff', 300: '#9fd4ff', 400: '#69bbff',
+              500: '#2aa3ff', 600: '#0a86e6', 700: '#006fc0', 800: '#005a9b', 900: '#0a4473'
+            },
+            ink: { 50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a' }
+          },
+          boxShadow: {
+            soft: '0 10px 30px -10px rgba(2, 6, 23, 0.15)'
+          }
+        }
+      }
+    }
+  </script>
+  <!-- ✅ GSAP CDN + Local Fallback -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  if (typeof gsap === 'undefined') {
+    document.write('<script src="gsap.min.js"><\\/script>');
+  }
+</script>
+
+  <style>
+    :root { color-scheme: light; }
+    html { scroll-behavior: smooth; }
+    body { font-feature-settings: "cv02","cv03","cv04","cv11"; }
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2; /* ✅ Add this standard property */
+  overflow: hidden;
+}
+mark {
+  padding: 0.1em 0.25em;
+  border-radius: 3px;
+}
+/* 🔍 Search Suggestions — Polished */
+#suggestionsList {
+  position: absolute;
+  top: 110%; /* position directly under input */
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 60;
+}
+
+/* Each suggestion item */
+#suggestionsList li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+#suggestionsList li:hover {
+  background: #f9fafb;
+  transform: scale(1.01);
+}
+
+/* Product image thumbnail */
+#suggestionsList img {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #f3f4f6;
+}
+
+/* Text styling */
+#suggestionsList .font-medium {
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+#suggestionsList li:hover .font-medium {
+  color: #0a86e6; /* Wamba blue highlight */
+}
+
+/* Subtext (price, etc.) */
+#suggestionsList .text-ink-500 {
+  font-size: 0.8rem;
+  color: #6b7280; /* gray-500 */
+}
+
+/* 🔝 Make sure header stays under dropdown */
+header {
+  z-index: 40;
+}
+#location iframe {
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+#location iframe:hover {
+  transform: scale(1.01);
+}
+
+  </style>
+</head>
+<body class="bg-white text-ink-900">
+  <!-- Top promo bar -->
+  <div class="w-full bg-brand-900 text-white text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-4">
+      <p class="font-semibold tracking-wide">FLASH SALE: 20% OFF sitewide — use code <span class="underline decoration-dashed">WAMBA20</span></p>
+      <a href="#new" class="text-white/90 hover:text-white">New In</a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-ink-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+      <button id="openNav" class="lg:hidden p-2 rounded-lg hover:bg-ink-50" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <a href="#" class="text-2xl font-black tracking-tight">Wamba <span class="text-brand-700">Boutique</span></a>
+     <!-- 🔍 Search form with perfectly aligned suggestions -->
+<div class="relative flex-1 flex justify-center max-w-xl mx-auto">
+  <form id="searchForm" class="flex w-full items-center gap-2">
+    <label for="q" class="sr-only">Search</label>
+    <input
+  id="q"
+  name="q"
+  type="search"
+  placeholder="Search dresses, tops, shoes..."
+  class="w-full rounded-xl border border-ink-200 focus:border-brand-500 focus:ring-brand-500 px-3 py-2 shadow-sm"
+  autocomplete="off"
+  autocorrect="off"
+  autocapitalize="off"
+  spellcheck="false"
+/>
+
+    <button
+      class="px-4 py-2 rounded-xl bg-brand-600 text-white font-medium hover:bg-brand-700"
+    >
+      Search
+    </button>
+  </form>
+
+  <!-- 🔽 Suggestions dropdown -->
+  <ul
+    id="suggestionsList"
+    class="absolute top-[110%] left-0 w-full bg-white border border-ink-200 rounded-xl shadow-lg hidden z-50 overflow-hidden"
+  ></ul>
+</div>
+
+
+      <nav class="ml-auto flex items-center gap-1">
+        <button id="openSearch" class="md:hidden p-2 rounded-lg hover:bg-ink-50" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <button id="openWishlist" class="p-2 rounded-lg hover:bg-ink-50" aria-label="Wishlist">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91l-.007-.003-.022-.01a20.758 20.758 0 01-.383-.173 24.316 24.316 0 01-4.244-2.568C4.688 16.018 2.25 13.38 2.25 10.5 2.25 8.014 4.235 6 6.75 6c1.403 0 2.693.615 3.57 1.59a5.242 5.242 0 013.36-1.19c2.485 0 4.47 2.014 4.47 4.5 0 2.88-2.438 5.518-4.739 7.656a24.317 24.317 0 01-4.244 2.568 20.821 20.821 0 01-.405.183z"/></svg>
+        </button>
+        <button id="openCart" class="relative p-2 rounded-lg hover:bg-ink-50" aria-label="Open cart">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3h2l.4 2M7 13h10l3-8H6.4M7 13l-2.293 6.879A1 1 0 005.667 21H19"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/></svg>
+          <span id="cartCount" class="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 bg-brand-600 text-white rounded-full">0</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Category row -->
+    <div class="hidden lg:block border-t border-ink-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex gap-6 text-sm">
+        <a class="hover:text-brand-700" href="#women">Women</a>
+        <a class="hover:text-brand-700" href="#men">Men</a>
+        <a class="hover:text-brand-700" href="#kids">Kids</a>
+        <a class="hover:text-brand-700" href="#beauty">Beauty</a>
+        <a class="hover:text-brand-700" href="#home">Home</a>
+        <a class="ml-auto hover:text-brand-700" href="#sale">Sale</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile nav drawer -->
+  <aside id="navDrawer" class="fixed inset-y-0 left-0 w-80 max-w-[85vw] bg-white shadow-soft z-50 -translate-x-full transition-transform">
+    <div class="p-4 border-b flex items-center justify-between">
+      <span class="text-xl font-extrabold">Wamba Boutique</span>
+      <button data-close-nav class="p-2 rounded-lg hover:bg-ink-50" aria-label="Close menu">✕</button>
+    </div>
+    <nav class="p-4 grid gap-2 text-ink-800">
+      <a href="#women" class="py-2">Women</a>
+      <a href="#men" class="py-2">Men</a>
+      <a href="#kids" class="py-2">Kids</a>
+      <a href="#beauty" class="py-2">Beauty</a>
+      <a href="#home" class="py-2">Home</a>
+      <a href="#sale" class="py-2 text-brand-700 font-semibold">Sale</a>
+    </nav>
+  </aside>
+  <div id="navBackdrop" class="fixed inset-0 bg-black/30 z-40 hidden"></div>
+
+  <!-- Hero -->
+  <section class="relative">
+    <img src="BIUBIU 2024 Plus Size Autumn And Winter Women's Open Top Suit Jacket, Two-Piece Dress Set.jpg" alt="Hero" class="w-full h-[40vh] md:h-[54vh] object-cover"/>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10"></div>
+    <div class="absolute inset-0 flex items-end md:items-center justify-center">
+      <div class="max-w-7xl w-full px-4 sm:px-6 pb-6 md:pb-0">
+        <div class="md:max-w-lg text-white">
+<h1 class="hero-text text-3xl md:text-5xl font-black leading-tight">Your Look. Your Rules.</h1>
+          <p class="mt-2 md:text-lg text-white/80">Daily drops under KSh 2,500. Free returns within 7 days.</p>
+          <div class="mt-4 flex gap-2">
+            <a href="#catalog" class="px-4 py-2 rounded-xl bg-white text-ink-900 font-semibold">Shop New In</a>
+            <a href="#sale" class="px-4 py-2 rounded-xl bg-white/10 backdrop-blur border border-white/30 text-white">Sale</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catalog with filters -->
+  <main id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 py-8 grid lg:grid-cols-[260px,1fr] gap-8">
+    <!-- Filters -->
+    <aside>
+      <div class="sticky top-[84px] p-4 rounded-2xl border border-ink-100 shadow-soft">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-extrabold">Filters</h2>
+          <button id="resetFilters" class="text-sm text-brand-700 hover:underline">Reset</button>
+        </div>
+        <form id="filterForm" class="mt-4 grid gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Category</label>
+            <select name="category" class="w-full rounded-xl border-ink-200">
+              <option value="">All</option>
+              <option>Women</option>
+              <option>Men</option>
+              <option>Kids</option>
+              <option>Beauty</option>
+              <option>Home</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Price Range (KSh)</label>
+            <div class="flex gap-2">
+              <input type="number" name="min" inputmode="numeric" placeholder="Min" class="w-1/2 rounded-xl border-ink-200" />
+              <input type="number" name="max" inputmode="numeric" placeholder="Max" class="w-1/2 rounded-xl border-ink-200" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Size</label>
+            <div class="grid grid-cols-6 gap-2">
+              <label class="flex items-center gap-2"><input type="checkbox" name="size" value="XS" class="rounded"/>XS</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="size" value="S" class="rounded"/>S</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="size" value="M" class="rounded"/>M</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="size" value="L" class="rounded"/>L</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="size" value="XL" class="rounded"/>XL</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="size" value="XXL" class="rounded"/>XXL</label>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Color</label>
+            <div class="grid grid-cols-3 gap-2">
+              <label class="flex items-center gap-2"><input type="checkbox" name="color" value="Black" class="rounded"/>Black</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="color" value="White" class="rounded"/>White</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="color" value="Blue" class="rounded"/>Blue</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="color" value="Red" class="rounded"/>Red</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="color" value="Green" class="rounded"/>Green</label>
+              <label class="flex items-center gap-2"><input type="checkbox" name="color" value="Pink" class="rounded"/>Pink</label>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Rating</label>
+            <select name="rating" class="w-full rounded-xl border-ink-200">
+              <option value="">Any</option>
+              <option value="4">4★ & up</option>
+              <option value="3">3★ & up</option>
+              <option value="2">2★ & up</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full mt-2 px-4 py-2 rounded-xl bg-ink-900 text-white font-semibold hover:bg-ink-800">Apply</button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <section>
+      <div class="mb-4 flex items-center justify-between gap-3">
+        <p id="resultCount" class="text-sm text-ink-600"></p>
+        <div class="flex items-center gap-2">
+          <label class="text-sm">Sort</label>
+          <select id="sortBy" class="rounded-xl border-ink-200">
+            <option value="popular">Most popular</option>
+            <option value="new">Newest</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="rating">Top rated</option>
+          </select>
+        </div>
+      </div>
+      <div id="grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+      <div class="mt-6 flex justify-center">
+        <button id="loadMore" class="px-4 py-2 rounded-xl border border-ink-200 hover:bg-ink-50">Load more</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Newsletter strip -->
+  <section class="bg-ink-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid md:grid-cols-2 items-center gap-6">
+      <div>
+        <h3 class="text-2xl font-black">Get 10% off your first order</h3>
+        <p class="text-ink-600">Join our list for drops, deals & style tips.</p>
+      </div>
+      <form id="newsletterForm" class="flex gap-3">
+        <input type="email" placeholder="Enter your email" class="flex-1 rounded-xl border-ink-300" required>
+        <button class="px-5 py-3 rounded-xl bg-brand-600 text-white font-semibold hover:bg-brand-700">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-ink-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid md:grid-cols-4 gap-8 text-sm">
+      <div>
+        <div class="text-xl font-black">Wamba Boutique</div>
+        <p class="mt-2 text-ink-600">Affordable fashion, delivered fast. Nairobi • Thika • Nationwide shipping.</p>
+      </div>
+      <div>
+        <div class="font-semibold">Shop</div>
+        <ul class="mt-2 grid gap-2 text-ink-700">
+          <li><a href="#women" class="hover:text-brand-700">Women</a></li>
+          <li><a href="#men" class="hover:text-brand-700">Men</a></li>
+          <li><a href="#kids" class="hover:text-brand-700">Kids</a></li>
+          <li><a href="#beauty" class="hover:text-brand-700">Beauty</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-semibold">Support</div>
+        <ul class="mt-2 grid gap-2 text-ink-700">
+          <li><a href="#" class="hover:text-brand-700">Help Center</a></li>
+          <li><a href="#" class="hover:text-brand-700">Returns</a></li>
+          <li><a href="#" class="hover:text-brand-700">Shipping</a></li>
+          <li><a href="#" class="hover:text-brand-700">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="font-semibold">Legal</div>
+        <ul class="mt-2 grid gap-2 text-ink-700">
+          <li><a href="#" class="hover:text-brand-700">Privacy</a></li>
+          <li><a href="#" class="hover:text-brand-700">Terms</a></li>
+          <li><a href="#" class="hover:text-brand-700">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="py-4 text-center text-xs text-ink-500">© <span id="year"></span> Wamba Boutique. Built with ❤️.</div>
+  </footer>
+
+  <!-- Product quick view modal -->
+  <div id="quickview" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" data-close-quickview></div>
+    <div class="absolute inset-x-0 top-6 mx-auto w-[96vw] max-w-4xl bg-white rounded-2xl shadow-soft overflow-hidden">
+      <div class="grid md:grid-cols-2">
+        <div class="aspect-square bg-ink-100">
+          <img id="qvImage" alt="Product" class="w-full h-full object-cover" />
+        </div>
+        <div class="p-6">
+          <h3 id="qvTitle" class="text-2xl font-black"></h3>
+          <div class="mt-1 flex items-baseline gap-2">
+            <div id="qvPrice" class="text-xl font-extrabold"></div>
+            <div id="qvCompare" class="text-sm line-through text-ink-500"></div>
+          </div>
+          <div id="qvStars" class="mt-1 text-amber-500"></div>
+          <p id="qvDesc" class="mt-3 text-ink-700"></p>
+          <div class="mt-4 grid gap-3">
+            <div>
+              <label class="block text-sm font-medium">Size</label>
+              <div id="qvSizes" class="mt-1 flex flex-wrap gap-2"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="block text-sm font-medium">Qty</label>
+              <input id="qvQty" type="number" min="1" value="1" class="w-20 rounded-xl border-ink-200" />
+            </div>
+            <div class="flex gap-2">
+              <button id="qvAdd" class="flex-1 px-4 py-2 rounded-xl bg-ink-900 text-white font-semibold">Add to cart</button>
+              <button id="qvWishlist" class="px-4 py-2 rounded-xl border border-ink-200">♡</button>
+            </div>
+          </div>
+          <button data-close-quickview class="absolute top-3 right-3 p-2 rounded-lg hover:bg-ink-50">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart drawer -->
+  <aside id="cartDrawer" class="fixed inset-y-0 right-0 z-50 w-[92vw] max-w-md bg-white border-l border-ink-100 shadow-soft translate-x-full transition-transform">
+    <div class="p-4 border-b flex items-center justify-between">
+      <h3 class="text-lg font-extrabold">Your Cart</h3>
+      <button data-close-cart class="p-2 rounded-lg hover:bg-ink-50">✕</button>
+    </div>
+    <div id="cartItems" class="p-4 grid gap-3 max-h-[65vh] overflow-y-auto"></div>
+    <div class="p-4 border-t grid gap-2">
+      <div class="flex items-center justify-between text-sm">
+        <span>Subtotal</span><strong id="cartSubtotal">KSh 0</strong>
+      </div>
+      <button id="checkoutBtn" class="mt-2 px-4 py-3 rounded-xl bg-brand-600 text-white font-semibold hover:bg-brand-700">Checkout</button>
+      <p class="text-xs text-ink-500">Secure checkout • SSL • M‑Pesa, Visa, Mastercard</p>
+    </div>
+  </aside>
+  <div id="cartBackdrop" class="fixed inset-0 bg-black/30 z-40 hidden"></div>
+
+  <!-- Checkout modal (stub) -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/50" data-close-checkout></div>
+    <div class="absolute inset-x-0 top-8 mx-auto w-[96vw] max-w-3xl bg-white rounded-2xl shadow-soft">
+      <div class="p-6 border-b flex items-center justify-between">
+        <h3 class="text-lg font-extrabold">Checkout</h3>
+        <button data-close-checkout class="p-2 rounded-lg hover:bg-ink-50">✕</button>
+      </div>
+      <form id="checkoutForm" class="p-6 grid gap-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium">Full Name</label>
+            <input name="name" required class="w-full rounded-xl border-ink-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Email</label>
+            <input type="email" name="email" required class="w-full rounded-xl border-ink-300" />
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium">Address</label>
+            <input name="address" required class="w-full rounded-xl border-ink-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">City</label>
+            <input name="city" required class="w-full rounded-xl border-ink-300" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Phone</label>
+            <input name="phone" required class="w-full rounded-xl border-ink-300" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Payment Method</label>
+          <select name="pay" class="w-full rounded-xl border-ink-300">
+            <option>M‑Pesa (STK Push)</option>
+            <option>Card (Visa/Mastercard)</option>
+            <option>Cash on Delivery</option>
+          </select>
+        </div>
+        <button class="mt-2 px-4 py-3 rounded-xl bg-ink-900 text-white font-semibold">Place Order</button>
+        <p class="text-xs text-ink-500">Demo only. Hook this to your payment provider (e.g., M‑Pesa Daraja, Stripe) server‑side.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 hidden">
+    <div class="px-4 py-2 rounded-xl bg-ink-900 text-white shadow-soft text-sm"></div>
+  </div>
+
+  <!-- Admin Add Product -->
+<button id="addProductBtn" class="fixed bottom-5 right-5 z-50 bg-brand-600 hover:bg-brand-700 text-white px-4 py-3 rounded-full shadow-lg">＋ Add Product</button>
+
+<!-- Admin Modal -->
+<div id="addProductModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
+<form id="addProductForm" class="bg-white p-6 rounded-2xl shadow-lg w-96 max-h-[90vh] overflow-y-auto grid gap-3">
+    <h3 class="text-xl font-bold">Add / Edit Product</h3>
+    <input name="title" placeholder="Title" class="border p-2 rounded-lg" required>
+    <input name="category" placeholder="Category (Women, Men, etc.)" class="border p-2 rounded-lg" required>
+    <input name="price" type="number" placeholder="Price (KSh)" class="border p-2 rounded-lg" required>
+    <input name="compare_at" type="number" placeholder="Old Price (optional)" class="border p-2 rounded-lg">
+    <input name="rating" type="number" step="0.1" max="5" placeholder="Rating (e.g. 4.5)" class="border p-2 rounded-lg">
+<input name="image" id="imageUrl" placeholder="Image URL (optional)" class="border p-2 rounded-lg">
+<label class="block text-sm font-medium text-ink-700 mt-2">or Upload Image</label>
+<input type="file" id="imageFile" accept="image/*" class="border p-2 rounded-lg">
+<img id="imagePreview" class="hidden w-full h-40 object-cover rounded-lg border mt-2" alt="Preview">
+    <input name="colors" placeholder="Colors (comma separated)" class="border p-2 rounded-lg">
+    <input name="sizes" placeholder="Sizes (comma separated)" class="border p-2 rounded-lg">
+    <textarea name="desc" placeholder="Description" class="border p-2 rounded-lg"></textarea>
+    <button class="bg-brand-600 text-white rounded-lg py-2">Save Product</button>
+  </form>
+</div>
+
+<script>
+// ---------- Image Upload Preview ----------
+const imageFileInput = document.getElementById("imageFile");
+const imageUrlInput = document.getElementById("imageUrl");
+const imagePreview = document.getElementById("imagePreview");
+
+imageFileInput.addEventListener("change", () => {
+  const file = imageFileInput.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imagePreview.src = e.target.result;
+    imagePreview.classList.remove("hidden");
+    imageUrlInput.value = e.target.result; // Store base64 directly
+  };
+  reader.readAsDataURL(file);
+});
+
+imageUrlInput.addEventListener("input", () => {
+  if (imageUrlInput.value.startsWith("data:image") || imageUrlInput.value.startsWith("http")) {
+    imagePreview.src = imageUrlInput.value;
+    imagePreview.classList.remove("hidden");
+  } else {
+    imagePreview.classList.add("hidden");
+  }
+});
+
+</script>
+
+
+  <script>
+    // ---------- Utilities ----------
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+    const money = (n) => `KSh ${Number(n).toLocaleString()}`;
+    const uid = () => Math.random().toString(36).slice(2,9);
+
+    // ---------- Sample data (swap for real API) ----------
+    // ---------- Product Storage ----------
+// ---------- Product Manager ----------
+let PRODUCTS = JSON.parse(localStorage.getItem("wamba_products") || "[]");
+
+// Save products to localStorage
+function saveProducts() {
+  localStorage.setItem("wamba_products", JSON.stringify(PRODUCTS));
+}
+
+// Delete product by ID
+function deleteProduct(id) {
+  if (!confirm("Delete this product?")) return;
+  PRODUCTS = PRODUCTS.filter(p => p.id !== id);
+  saveProducts();
+  renderCatalog();
+  toast("Product deleted.");
+}
+
+// ---------- Add / Edit Modal ----------
+const addProductBtn = document.getElementById("addProductBtn");
+const addProductModal = document.getElementById("addProductModal");
+const addProductForm = document.getElementById("addProductForm");
+
+let editingId = null; // track which product is being edited
+
+addProductForm.onsubmit = (e) => {
+  e.preventDefault(); // stop page reload
+
+  const fd = new FormData(addProductForm);
+  const product = Object.fromEntries(fd.entries());
+
+  // Convert numeric fields
+  product.price = Number(product.price);
+  product.compare_at = product.compare_at ? Number(product.compare_at) : null;
+  product.rating = Number(product.rating || 4.5);
+
+  // Convert comma-separated strings to arrays
+  product.colors = product.colors ? product.colors.split(",").map(c => c.trim()) : [];
+  product.sizes = product.sizes ? product.sizes.split(",").map(s => s.trim()) : [];
+
+  // If editing → update; else → add new
+  if (editingId) {
+    const index = PRODUCTS.findIndex(p => p.id === editingId);
+    if (index > -1) PRODUCTS[index] = { ...PRODUCTS[index], ...product };
+    toast("✅ Product updated!");
+  } else {
+    product.id = uid();
+    PRODUCTS.push(product);
+    toast("✅ Product added!");
+  }
+
+  // Save to localStorage and refresh view
+  saveProducts();
+  renderCatalog();
+
+  // Reset and close modal
+  addProductForm.reset();
+  imagePreview.classList.add("hidden");
+  imagePreview.src = "";
+  editingId = null;
+  addProductModal.classList.add("hidden");
+};
+
+
+// Open modal
+addProductBtn.onclick = () => {
+  addProductForm.reset();
+  editingId = null;
+  addProductModal.classList.remove("hidden");
+};
+
+// Close modal when clicking outside
+addProductModal.onclick = (e) => {
+  if (e.target === addProductModal) addProductModal.classList.add("hidden");
+};
+
+
+
+// ---------- Edit Product ----------
+function editProduct(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  editingId = id;
+  addProductModal.classList.remove("hidden");
+  Object.keys(p).forEach(k => {
+    if (addProductForm[k]) addProductForm[k].value = Array.isArray(p[k]) ? p[k].join(", ") : p[k];
+  });
+}
+
+
+
+    // ---------- State ----------
+    const state = {
+      q: '',
+      sort: 'popular',
+      page: 1,
+      perPage: 12,
+      filters: { category: '', min: '', max: '', size: [], color: [], rating: '' },
+      cart: JSON.parse(localStorage.getItem('wamba_cart')||'[]'),
+      wishlist: JSON.parse(localStorage.getItem('wamba_wishlist')||'[]'),
+      recent: JSON.parse(localStorage.getItem('wamba_recent')||'[]'),
+    };
+
+    // ---------- DOM refs ----------
+    const grid = $('#grid');
+    const resultCount = $('#resultCount');
+    const sortBy = $('#sortBy');
+    const filterForm = $('#filterForm');
+    const loadMoreBtn = $('#loadMore');
+    const cartDrawer = $('#cartDrawer');
+    const cartBackdrop = $('#cartBackdrop');
+    const cartItems = $('#cartItems');
+    const cartSubtotal = $('#cartSubtotal');
+    const cartCount = $('#cartCount');
+    const navDrawer = $('#navDrawer');
+    const navBackdrop = $('#navBackdrop');
+
+    // Quickview refs
+    const quickview = $('#quickview');
+    const qvImage = $('#qvImage');
+    const qvTitle = $('#qvTitle');
+    const qvPrice = $('#qvPrice');
+    const qvCompare = $('#qvCompare');
+    const qvDesc = $('#qvDesc');
+    const qvSizes = $('#qvSizes');
+    const qvQty = $('#qvQty');
+    const qvWishlist = $('#qvWishlist');
+    const qvAdd = $('#qvAdd');
+
+    // Checkout refs
+    const checkoutModal = $('#checkoutModal');
+
+    // Year
+    $('#year').textContent = new Date().getFullYear();
+
+    // ---------- Navigation ----------
+    $('#openNav').addEventListener('click', ()=>{
+      navDrawer.classList.remove('-translate-x-full');
+      navBackdrop.classList.remove('hidden');
+    });
+    $('[data-close-nav]').addEventListener('click', closeNav);
+    navBackdrop.addEventListener('click', closeNav);
+    function closeNav(){
+      navDrawer.classList.add('-translate-x-full');
+      navBackdrop.classList.add('hidden');
+    }
+
+    // ---------- Search ----------
+    const searchForm = $('#searchForm');
+    const qInput = $('#q');
+    $('#openSearch').addEventListener('click', ()=> qInput?.focus());
+    searchForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      state.q = qInput.value.trim();
+      state.page = 1;
+      renderCatalog();
+    });
+    // 🔍 Instant search as you type
+let searchTimer;
+qInput.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.q = qInput.value.trim();
+    state.page = 1;
+    renderCatalog();
+  }, 300); // delay typing by 300ms for smoother performance
+});
+
+// ---------- 🔍 Smart Suggestions ----------
+const suggestionsList = document.getElementById("suggestionsList");
+
+qInput.addEventListener("input", () => {
+  const query = qInput.value.trim().toLowerCase();
+
+  // Hide suggestions if empty
+  if (!query) {
+    suggestionsList.classList.add("hidden");
+    return;
+  }
+
+  // Find matches from existing products
+const matches = PRODUCTS.filter(p =>
+  p.title.toLowerCase().includes(query) ||
+  p.category?.toLowerCase().includes(query) ||
+  p.desc?.toLowerCase().includes(query)
+).slice(0, 5); // limit to 5 suggestions
+
+// Build list with thumbnails
+if (matches.length) {
+  suggestionsList.innerHTML = matches
+    .map(p => `
+      <li class="flex items-center gap-3 hover:bg-ink-50 transition-all duration-200 px-3 py-2 cursor-pointer">
+        <img src="${p.image}" alt="${p.title}" class="w-12 h-12 rounded-md object-cover border border-ink-100">
+        <div class="flex-1">
+          <div class="font-medium text-sm line-clamp-1">${p.title}</div>
+          <div class="text-xs text-ink-500">${money(p.price)}</div>
+        </div>
+      </li>
+    `)
+    .join("");
+} else {
+  suggestionsList.innerHTML = `<li class="text-ink-500 italic px-3 py-2">No products found</li>`;
+}
+
+suggestionsList.classList.remove("hidden");
+
+// Animate dropdown items
+if (typeof gsap !== "undefined") {
+  gsap.from("#suggestionsList li", {
+    opacity: 0,
+    y: 10,
+    stagger: 0.05,
+    duration: 0.4,
+    ease: "power2.out"
+  });
+}
+
+});
+
+// Handle click on a suggestion
+suggestionsList.addEventListener("click", e => {
+  if (e.target.tagName === "LI") {
+    const term = e.target.textContent.trim();
+    qInput.value = term;
+    state.q = term;
+    state.page = 1;
+    suggestionsList.classList.add("hidden");
+    renderCatalog();
+  }
+});
+
+// Close suggestions when clicking outside
+document.addEventListener("click", e => {
+  if (!searchForm.contains(e.target) && !suggestionsList.contains(e.target)) {
+    suggestionsList.classList.add("hidden");
+  }
+});
+
+
+
+
+    // ---------- Filters ----------
+    filterForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const fd = new FormData(filterForm);
+      state.filters.category = fd.get('category')||'';
+      state.filters.min = fd.get('min')||'';
+      state.filters.max = fd.get('max')||'';
+      state.filters.size = fd.getAll('size');
+      state.filters.color = fd.getAll('color');
+      state.filters.rating = fd.get('rating')||'';
+      state.page = 1;
+      renderCatalog();
+    });
+    $('#resetFilters').addEventListener('click', ()=>{
+      filterForm.reset();
+      state.filters = { category:'', min:'', max:'', size:[], color:[], rating:'' };
+      state.page = 1;
+      renderCatalog();
+    });
+
+    // ---------- Sort ----------
+    sortBy.addEventListener('change', ()=>{ state.sort = sortBy.value; state.page = 1; renderCatalog(); });
+
+    // ---------- Core list rendering ----------
+  function applyFilters(list) {
+  return list.filter(p => {
+    // ✅ Combine all searchable fields
+    const searchBlob = `
+      ${p.title || ''}
+      ${p.category || ''}
+      ${p.colors?.join(' ') || ''}
+      ${p.sizes?.join(' ') || ''}
+      ${p.desc || ''}
+    `.toLowerCase();
+
+    // ✅ Smart search: split user query into words
+    if (state.q) {
+      const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+      const allMatch = words.every(word => searchBlob.includes(word));
+      if (!allMatch) return false;
+    }
+
+    // ✅ Then apply other filters
+    if (state.filters.category && p.category !== state.filters.category) return false;
+    if (state.filters.min && p.price < Number(state.filters.min)) return false;
+    if (state.filters.max && p.price > Number(state.filters.max)) return false;
+    if (state.filters.size.length && !state.filters.size.some(s => p.sizes?.includes(s))) return false;
+    if (state.filters.color.length && !state.filters.color.some(c => p.colors?.includes(c))) return false;
+    if (state.filters.rating && p.rating < Number(state.filters.rating)) return false;
+
+    return true;
+  });
+}
+
+
+    function sortList(list){
+      const s = state.sort;
+      return list.slice().sort((a,b)=>{
+        if(s==='price_asc') return a.price - b.price;
+        if(s==='price_desc') return b.price - a.price;
+        if(s==='rating') return b.rating - a.rating;
+        if(s==='new') return b.id.localeCompare(a.id);
+        return 0; // popular (default order)
+      });
+    }
+
+    function renderCatalog() {
+  const all = sortList(applyFilters(PRODUCTS));
+  const visible = all.slice(0, state.page * state.perPage);
+  resultCount.textContent = `${all.length} items • page ${state.page}`;
+  grid.innerHTML = visible.length
+    ? visible.map(cardHTML).join('')
+    : `<p class="text-center text-ink-500 col-span-full py-10">No products found matching your search.</p>`;
+  loadMoreBtn.classList.toggle('hidden', visible.length >= all.length);
+
+  // bind buttons
+  $$('.card').forEach(card => {
+    card.querySelector('[data-qv]')?.addEventListener('click', ()=> openQuickview(card.dataset.id));
+    card.querySelector('[data-add]')?.addEventListener('click', ()=> addToCart(card.dataset.id, 1));
+    card.querySelector('[data-like]')?.addEventListener('click', ()=> toggleWishlist(card.dataset.id));
+  });
+
+  // ✨ Animate search highlights
+  if (typeof gsap !== "undefined") {
+    gsap.from("mark", {
+      opacity: 0,
+      y: 6,
+      duration: 0.6,
+      stagger: 0.05,
+      ease: "power2.out"
+    });
+  }
+}
+
+
+  function cardHTML(p) {
+  // Highlight search words inside product text
+  let title = p.title;
+  let desc = p.desc || "";
+  const query = state.q.trim().toLowerCase();
+
+  if (query) {
+    const words = query.split(/\s+/).filter(Boolean);
+    const regex = new RegExp(`(${words.join("|")})`, "gi");
+    title = title.replace(regex, `<mark class='bg-yellow-200'>$1</mark>`);
+    desc = desc.replace(regex, `<mark class='bg-yellow-200'>$1</mark>`);
+  }
+
+  return `
+    <article class="card group border border-ink-100 rounded-2xl overflow-hidden" data-id="${p.id}">
+      <div class="relative aspect-[3/4] bg-ink-100">
+        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover"/>
+        ${p.compare_at ? '<span class="absolute top-2 left-2 text-xs px-2 py-1 rounded-full bg-red-600 text-white">SALE</span>' : ''}
+        <button data-like class="absolute top-2 right-2 p-2 rounded-full bg-white/80">♡</button>
+        <button data-qv class="absolute bottom-2 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-xl bg-white text-ink-900 opacity-0 group-hover:opacity-100 transition">Quick view</button>
+      </div>
+      <div class="p-3">
+        <h3 class="font-semibold line-clamp-2">${title}</h3>
+        <div class="mt-1 flex items-baseline gap-2">
+          <div class="font-extrabold">${money(p.price)}</div>
+          ${p.compare_at ? `<div class="text-xs line-through text-ink-500">${money(p.compare_at)}</div>` : ""}
+        </div>
+        <div class="mt-1 text-sm text-amber-500">${"★".repeat(Math.floor(p.rating))}${p.rating % 1 ? "½" : ""} <span class="text-ink-500">(${p.rating})</span></div>
+        <p class="mt-1 text-sm text-ink-600 line-clamp-2">${desc}</p>
+        <button data-add class="mt-2 w-full px-3 py-2 rounded-xl bg-ink-900 text-white text-sm">Add to cart</button>
+
+        <!-- Admin Controls -->
+        <div class="mt-2 flex gap-2">
+          <button onclick="editProduct('${p.id}')" class="flex-1 bg-brand-100 text-brand-800 text-xs rounded-xl py-1">✏️ Edit</button>
+          <button onclick="deleteProduct('${p.id}')" class="flex-1 bg-red-100 text-red-700 text-xs rounded-xl py-1">🗑 Delete</button>
+        </div>
+      </div>
+    </article>`;
+}
+
+
+
+    loadMoreBtn.addEventListener('click', ()=>{ state.page++; renderCatalog(); });
+
+    // ---------- Quickview ----------
+    function openQuickview(id){
+      const p = PRODUCTS.find(x=>x.id===id);
+      if(!p) return;
+      qvImage.src = p.image; qvTitle.textContent = p.title; qvDesc.textContent = p.desc;
+      qvPrice.textContent = money(p.price);
+      qvCompare.textContent = p.compare_at? money(p.compare_at): '';
+      qvSizes.innerHTML = p.sizes.map(s=>`<label class='px-3 py-1 rounded-xl border cursor-pointer'><input class='sr-only' type='radio' name='qvSize' value='${s}'/>${s}</label>`).join('');
+      qvQty.value = 1;
+      qvWishlist.onclick = ()=> toggleWishlist(id, true);
+      qvAdd.onclick = ()=>{
+        const chosen = $('input[name="qvSize"]:checked', qvSizes)?.value || p.sizes[0] || 'One Size';
+        addToCart(id, Number(qvQty.value||1), chosen);
+        closeQuickview();
+      };
+      quickview.classList.remove('hidden');
+    }
+    function closeQuickview(){ quickview.classList.add('hidden'); }
+    $('[data-close-quickview]').addEventListener('click', closeQuickview);
+    quickview.addEventListener('click', (e)=>{ if(e.target.dataset.closeQuickview!==undefined) closeQuickview(); });
+
+    // ---------- Wishlist ----------
+    function toggleWishlist(id, showToast){
+      const i = state.wishlist.indexOf(id);
+      if(i>-1) state.wishlist.splice(i,1); else state.wishlist.push(id);
+      localStorage.setItem('wamba_wishlist', JSON.stringify(state.wishlist));
+      if(showToast) toast(i>-1? 'Removed from wishlist': 'Added to wishlist');
+      renderCatalog();
+    }
+
+    // ---------- Cart ----------
+    function addToCart(id, qty=1, size){
+      const p = PRODUCTS.find(x=>x.id===id); if(!p) return;
+      const key = `${id}:${size||''}`;
+      const existing = state.cart.find(i=>i.key===key);
+      if(existing) existing.qty += qty; else state.cart.push({ key, id, title:p.title, price:p.price, image:p.image, size:size||p.sizes[0]||'One Size', qty });
+      saveCart();
+      openCart();
+      toast('Added to cart');
+    }
+    function removeFromCart(key){ state.cart = state.cart.filter(i=>i.key!==key); saveCart(); renderCart(); }
+    function changeQty(key, qty){ const it = state.cart.find(i=>i.key===key); if(!it) return; it.qty = Math.max(1, qty); saveCart(); renderCart(); }
+    function saveCart(){ localStorage.setItem('wamba_cart', JSON.stringify(state.cart)); updateCartCount(); renderCart(); }
+    function updateCartCount(){ cartCount.textContent = state.cart.reduce((s,i)=>s+i.qty,0); }
+
+    function renderCart(){
+      if(!state.cart.length){ cartItems.innerHTML = '<p class="text-ink-600">Your cart is empty.</p>'; cartSubtotal.textContent = money(0); return; }
+      cartItems.innerHTML = state.cart.map(i=>`
+        <div class="flex gap-3 border border-ink-100 rounded-xl p-2">
+          <img src="${i.image}" alt="${i.title}" class="w-20 h-24 object-cover rounded-lg"/>
+          <div class="flex-1">
+            <div class="font-medium">${i.title}</div>
+            <div class="text-sm text-ink-600">Size: ${i.size}</div>
+            <div class="mt-1 flex items-center gap-2">
+              <input type="number" min="1" value="${i.qty}" data-qty="${i.key}" class="w-16 rounded-xl border-ink-200"/>
+              <strong>${money(i.price)}</strong>
+            </div>
+          </div>
+          <button data-remove="${i.key}" class="self-start p-2 rounded-lg hover:bg-ink-50">✕</button>
+        </div>`).join('');
+      cartItems.querySelectorAll('[data-remove]').forEach(b=> b.addEventListener('click', ()=> removeFromCart(b.dataset.remove)));
+      cartItems.querySelectorAll('input[type=number]').forEach(inp=> inp.addEventListener('change', ()=> changeQty(inp.dataset.qty, Number(inp.value))));
+      const subtotal = state.cart.reduce((s,i)=> s + i.price*i.qty, 0);
+      cartSubtotal.textContent = money(subtotal);
+    }
+
+    // Drawer controls
+    $('#openCart').addEventListener('click', openCart);
+    $('[data-close-cart]').addEventListener('click', closeCart);
+    cartBackdrop.addEventListener('click', closeCart);
+    function openCart(){ cartDrawer.classList.remove('translate-x-full'); cartBackdrop.classList.remove('hidden'); renderCart(); }
+    function closeCart(){ cartDrawer.classList.add('translate-x-full'); cartBackdrop.classList.add('hidden'); }
+
+    // ---------- Checkout (demo) ----------
+    $('#checkoutBtn').addEventListener('click', ()=>{ closeCart(); checkoutModal.classList.remove('hidden'); });
+    $('[data-close-checkout]').addEventListener('click', ()=> checkoutModal.classList.add('hidden'));
+    checkoutModal.addEventListener('click', (e)=>{ if(e.target.dataset.closeCheckout!==undefined) checkoutModal.classList.add('hidden'); });
+    $('#checkoutForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      toast('Order placed (demo). Connect payments server‑side.');
+      checkoutModal.classList.add('hidden');
+      state.cart = []; saveCart();
+    });
+
+    // ---------- Newsletter ----------
+    $('#newsletterForm').addEventListener('submit', (e)=>{ e.preventDefault(); toast('Subscribed!'); e.target.reset(); })
+
+    // ---------- Toast ----------
+    function toast(msg){
+      const t = $('#toast');
+      t.querySelector('div').textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(t._to);
+      t._to = setTimeout(()=> t.classList.add('hidden'), 1800);
+    }
+
+    // ---------- Init ----------
+    updateCartCount();
+    renderCatalog();
+
+  </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Animate header
+    gsap.from("header", {
+      duration: 1,
+      y: -80,
+      opacity: 0,
+      ease: "power3.out"
+    });
+
+    // Animate hero text
+    gsap.from(".hero-text", {
+      duration: 1.2,
+      y: 50,
+      opacity: 0,
+      delay: 0.4,
+      ease: "power3.out"
+    });
+
+    // Animate product cards as they load
+    gsap.from(".card", {
+      duration: 1,
+      opacity: 0,
+      y: 40,
+      stagger: 0.08,
+      ease: "power2.out",
+      delay: 0.3
+    });
+  });
+</script>
+<!-- 🌍 Wamba Boutique Map Section -->
+<!-- 🌍 Wamba Boutique Map Section -->
+<section id="location" class="mt-16 bg-white py-10 border-t border-gray-200">
+  <div class="max-w-6xl mx-auto text-center px-4">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Visit Wamba Boutique</h2>
+    <p class="text-gray-600 mb-6">
+      Burton Plaza, Shop 2, Ground Floor, Off Uhuru Street, Thika
+    </p>
+
+    <!-- Clickable Map -->
+    <a
+  href="https://www.google.com/maps?q=Wamba+Boutique+Thika+Kenya"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="inline-block rounded-xl overflow-hidden shadow-lg transition-transform hover:scale-[1.02]"
+>
+
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7991649892624!2d37.0725543!3d-1.0363331!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f4dfb9a13c1f5%3A0x65b08e09c642f158!2sWamba%20Boutique!5e0!3m2!1sen!2ske!4v1698061867000!5m2!1sen!2ske"
+        width="100%"
+        height="400"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </a>
+
+    <p class="mt-4 text-gray-500 text-sm">
+      Click the map to open Google Maps with <strong>Wamba Boutique</strong> already in the search bar 🚗
+    </p>
+  </div>
+</section>
+
+
+</body>
+</html>

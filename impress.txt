@@ -1,0 +1,3 @@
+the site is personalized.
+the product part is working. 
+the search bar is working.
